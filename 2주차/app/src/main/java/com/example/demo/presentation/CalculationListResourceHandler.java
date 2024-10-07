@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.List;
 
-public class CalculationListResource extends ResourceMethodHandler {
+public class CalculationListResourceHandler extends ResourceMethodHandler {
     public final static String KEY = "GET /calculations";
 
     private final Calculator calculator = new Calculator();

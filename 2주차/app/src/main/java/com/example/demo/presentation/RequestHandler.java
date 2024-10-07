@@ -15,8 +15,8 @@ public class RequestHandler implements HttpHandler {
 
     public RequestHandler() {
         handlers.put(HomeGetResource.KEY, new HomeGetResource());
-        handlers.put(CalculationCreateResource.KEY, new CalculationCreateResource());
-        handlers.put(CalculationListResource.KEY, new CalculationListResource());
+        handlers.put(com.example.demo.presentation.CalculationCreateResourceHandler.KEY, new CalculationCreateResourceHandler());
+        handlers.put(CalculationListResourceHandler.KEY, new CalculationListResourceHandler());
     }
 
     @Override

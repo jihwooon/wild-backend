@@ -1,26 +1,25 @@
 package com.example.demo;
 
-import com.example.demo.presentation.RequestHandler;
-import com.sun.net.httpserver.HttpServer;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.net.InetSocketAddress;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
+@ComponentScan
 public class App {
 
     public static void main(String[] args) throws IOException {
-        App app = new App();
+        ApplicationContext context = new AnnotationConfigApplicationContext(App.class);
+        Server app = context.getBean(Server.class);
         app.run();
     }
 
-    public void run() throws IOException {
-        RequestHandler requestHandler = new RequestHandler();
-
-        InetSocketAddress address = new InetSocketAddress("localhost", 8080);
-        HttpServer httpServer = HttpServer.create(address, 0);
-        httpServer.createContext("/", requestHandler);
-        httpServer.start();
-
-        System.out.println("Listening on http://localhost:8080");
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 }

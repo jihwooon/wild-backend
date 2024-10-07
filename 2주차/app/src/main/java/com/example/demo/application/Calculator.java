@@ -6,13 +6,16 @@ import com.example.demo.infrastructure.CalculationRepository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Calculator {
-    private final CalculationRepository calculationRepository = CalculationRepository.getInstance();
+    private final CalculationRepository calculationRepository;
 
     private final Map<String, Operator> operators = new HashMap<>();
 
-    public Calculator() {
+    public Calculator(CalculationRepository calculationRepository) {
+        this.calculationRepository = calculationRepository;
         operators.put("+", new OperatorPlus());
         operators.put("-", new OperatorMinus());
         operators.put("*", new OperatorMultiply());

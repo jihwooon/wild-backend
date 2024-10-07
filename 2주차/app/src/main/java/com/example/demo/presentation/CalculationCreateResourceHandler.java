@@ -7,33 +7,45 @@ import com.example.demo.presentation.dto.CalculationResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import org.springframework.stereotype.Component;
 
+
+@Component
 public class CalculationCreateResourceHandler extends ResourceMethodHandler {
-    public final static String KEY = "POST /calculations";
 
-    private final Calculator calculator = new Calculator();
+    private final Calculator calculator;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
+
+    public CalculationCreateResourceHandler(Calculator calculator, ObjectMapper objectMapper) {
+        this.calculator = calculator;
+        this.objectMapper = objectMapper;
+    }
 
     public String handle(String content) throws IOException {
         CalculationRequestDto calculationRequestDto = objectMapper.readValue(
-                content,
-                CalculationRequestDto.class
+            content,
+            CalculationRequestDto.class
         );
 
         Calculation calculate = calculator.calculate(
-                calculationRequestDto.getNumber1(),
-                calculationRequestDto.getNumber2(),
-                calculationRequestDto.getOperator()
+            calculationRequestDto.getNumber1(),
+            calculationRequestDto.getNumber2(),
+            calculationRequestDto.getOperator()
         );
 
         return objectMapper.writeValueAsString(
-                new CalculationResponseDto(
-                        calculate.getNumber1(),
-                        calculate.getNumber2(),
-                        calculate.getOperator(),
-                        calculate.getResult()
-                )
+            new CalculationResponseDto(
+                calculate.getNumber1(),
+                calculate.getNumber2(),
+                calculate.getOperator(),
+                calculate.getResult()
+            )
         );
+    }
+
+    @Override
+    public String key() {
+        return "POST /calculations";
     }
 }

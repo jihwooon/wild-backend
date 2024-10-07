@@ -2,21 +2,31 @@ package com.example.demo.presentation;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.stereotype.Component;
 
+@Component
 public class RequestHandler implements HttpHandler {
+
     private final Map<String, ResourceMethodHandler> handlers = new HashMap<>();
 
-    public RequestHandler() {
-        handlers.put(HomeGetResource.KEY, new HomeGetResource());
-        handlers.put(com.example.demo.presentation.CalculationCreateResourceHandler.KEY, new CalculationCreateResourceHandler());
-        handlers.put(CalculationListResourceHandler.KEY, new CalculationListResourceHandler());
+    public RequestHandler(
+        HomeGetHandler homeGetHandler,
+        CalculationCreateResourceHandler calculationCreateResourceHandler,
+        CalculationListResourceHandler calculationListResourceHandler
+    ) {
+        addResourceMethodHandler(homeGetHandler);
+        addResourceMethodHandler(calculationCreateResourceHandler);
+        addResourceMethodHandler(calculationListResourceHandler);
+    }
+
+    private void addResourceMethodHandler(ResourceMethodHandler resourceMethodHandler) {
+        handlers.put(resourceMethodHandler.key(), resourceMethodHandler);
     }
 
     @Override
@@ -37,8 +47,8 @@ public class RequestHandler implements HttpHandler {
     }
 
     private void sendResponseContent(
-            HttpExchange exchange,
-            String responseContent
+        HttpExchange exchange,
+        String responseContent
     ) throws IOException {
         byte[] bytes = responseContent.getBytes();
 

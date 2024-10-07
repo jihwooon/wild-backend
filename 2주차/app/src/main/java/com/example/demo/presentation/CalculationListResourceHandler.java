@@ -7,13 +7,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.List;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CalculationListResourceHandler extends ResourceMethodHandler {
-    public final static String KEY = "GET /calculations";
 
-    private final Calculator calculator = new Calculator();
+    private final Calculator calculator;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
+
+    public CalculationListResourceHandler(Calculator calculator, ObjectMapper objectMapper) {
+        this.calculator = calculator;
+        this.objectMapper = objectMapper;
+    }
 
     @Override
     public String handle(String content) throws IOException {
@@ -21,7 +27,12 @@ public class CalculationListResourceHandler extends ResourceMethodHandler {
         calculator.getCalculationList();
 
         return objectMapper.writeValueAsString(
-                CalculationListRequestDto.of(calculations)
+            CalculationListRequestDto.of(calculations)
         );
+    }
+
+    @Override
+    public String key() {
+        return "GET /calculations";
     }
 }

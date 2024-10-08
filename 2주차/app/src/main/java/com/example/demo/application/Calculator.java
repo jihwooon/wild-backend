@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Calculator {
+
     private final CalculationRepository calculationRepository;
 
     private final Map<String, Operator> operators = new HashMap<>();
@@ -26,7 +27,12 @@ public class Calculator {
         Operator operator = operators.get(operatorSymbol);
         int result = operator.calculate(number1, number2);
 
-        Calculation calculation = new Calculation(operatorSymbol, number1, number2, result);
+        Calculation calculation = new Calculation(operatorSymbol, number1, number2,
+            result);
+
+        if (calculation.getResult() == 0) {
+            return calculation;
+        }
 
         calculationRepository.add(calculation);
 

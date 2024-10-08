@@ -1,7 +1,7 @@
 package com.example.demo.application;
 
 import com.example.demo.infrastructure.Calculation;
-import com.example.demo.infrastructure.CalculationRepository;
+import com.example.demo.infrastructure.InMemoryCalculationRepository;
 
 import java.util.HashMap;
 import java.util.List;

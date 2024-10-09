@@ -1,21 +1,34 @@
-package com.example.demo;
+package com.example.demo.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import com.example.demo.application.Calculator;
 import com.example.demo.infrastructure.Calculation;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class CalculatorTest {
 
-    FakeCalculationRepository calculationRepository;
-    Calculator calculator;
+    private CalculationRepository calculationRepository;
+    private Calculator calculator;
 
     @BeforeEach
     void setUp() {
-        calculationRepository = new FakeCalculationRepository();
+        calculationRepository = mock(CalculationRepository.class);
+
+        List<Calculation> calculations = List.of(
+            new Calculation("+", 1, 2, 3)
+        );
+        when(calculationRepository.getAll()).thenReturn(calculations);
+
+
         calculator = new Calculator(calculationRepository);
     }
 
@@ -28,7 +41,7 @@ class CalculatorTest {
         assertThat(calculate.getOperator()).isEqualTo("+");
         assertThat(calculate.getResult()).isEqualTo(12);
 
-        assertThat(calculationRepository.isAdded()).isTrue();
+        verify(calculationRepository).add(any());
     }
 
     @Test
@@ -40,7 +53,7 @@ class CalculatorTest {
         assertThat(calculate.getOperator()).isEqualTo("-");
         assertThat(calculate.getResult()).isEqualTo(8);
 
-        assertThat(calculationRepository.isAdded()).isTrue();
+        verify(calculationRepository).add(any());
     }
 
 
@@ -53,7 +66,7 @@ class CalculatorTest {
         assertThat(calculate.getOperator()).isEqualTo("*");
         assertThat(calculate.getResult()).isEqualTo(20);
 
-        assertThat(calculationRepository.isAdded()).isTrue();
+        verify(calculationRepository).add(any());
     }
 
     @Test
@@ -65,12 +78,20 @@ class CalculatorTest {
         assertThat(calculate.getOperator()).isEqualTo("/");
         assertThat(calculate.getResult()).isEqualTo(5);
 
-        assertThat(calculationRepository.isAdded()).isTrue();
+        verify(calculationRepository).add(any());
     }
 
     @Test
     void divideByZero() {
         assertThatThrownBy(() -> calculator.calculate(1, 0, "/"));
-        assertThat(calculationRepository.isAdded()).isFalse();
+
+        verify(calculationRepository, never()).add(any());
+    }
+
+    @Test
+    void getAll() {
+        List<Calculation> calculationList = calculator.getCalculationList();
+
+        assertThat(calculationList).hasSize(1);
     }
 }

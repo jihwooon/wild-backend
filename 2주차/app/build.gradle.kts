@@ -14,7 +14,7 @@ dependencies {
 
     // Use Spring Boot
     implementation("org.springframework.boot:spring-boot-starter-web")
-    testImplementation("org.springframework.boot:spring-boot-starter-web")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

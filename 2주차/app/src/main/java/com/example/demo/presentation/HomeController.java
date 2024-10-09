@@ -10,6 +10,6 @@ public class HomeController {
 
     @GetMapping("/")
     public String handle() {
-        return "Hello, world!\n";
+        return "Hello, World";
     }
 }

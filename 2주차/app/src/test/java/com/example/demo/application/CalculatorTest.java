@@ -9,7 +9,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.example.demo.infrastructure.Calculation;
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +26,6 @@ class CalculatorTest {
             new Calculation("+", 1, 2, 3)
         );
         when(calculationRepository.getAll()).thenReturn(calculations);
-
 
         calculator = new Calculator(calculationRepository);
     }

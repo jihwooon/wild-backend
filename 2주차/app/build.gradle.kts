@@ -1,7 +1,9 @@
 plugins {
-    // Apply the application plugin to add support for building a CLI application in Java.
-    application
+    java
+    id("org.springframework.boot") version "3.3.4"
 }
+
+apply(plugin = "io.spring.dependency-management")
 
 repositories {
     // Use Maven Central for resolving dependencies.
@@ -9,21 +11,10 @@ repositories {
 }
 
 dependencies {
-    // Use JUnit Jupiter for testing.
-    testImplementation(libs.junit.jupiter)
 
-    // Use Assertj-core
-    testImplementation("org.assertj:assertj-core:3.26.3")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
-    // Use Spring framework
-    implementation("org.springframework:spring-core:6.1.13")
-    implementation("org.springframework:spring-context:6.1.13")
-
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.14.0")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.14.0")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.0")
-    implementation("com.fasterxml.jackson.module:jackson-module-parameter-names:2.14.0")
+    // Use Spring Boot
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    testImplementation("org.springframework.boot:spring-boot-starter-web")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -31,11 +22,6 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
-}
-
-application {
-    // Define the main class for the application.
-    mainClass = "com.example.demo.App"
 }
 
 tasks.named<Test>("test") {

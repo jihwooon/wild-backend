@@ -1,5 +1,6 @@
 package com.example.demo.controllers.dto;
 
+import com.example.demo.model.LineItem;
 import java.util.List;
 
 public record CartDto(

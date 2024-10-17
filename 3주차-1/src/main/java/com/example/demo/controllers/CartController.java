@@ -1,15 +1,10 @@
 package com.example.demo.controllers;
 
+import com.example.demo.application.CartService;
 import com.example.demo.controllers.dto.CartDto;
 import com.example.demo.controllers.dto.CartDto.LineItemDto;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import org.bson.Document;
-import org.bson.types.ObjectId;
+import com.example.demo.model.Cart;
+import com.example.demo.model.LineItem;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,55 +13,29 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/cart")
 public class CartController {
 
-    private final MongoDatabase mongoDatabase;
+    private final CartService cartService;
 
-    public CartController(MongoDatabase mongoDatabase) {
-        this.mongoDatabase = mongoDatabase;
+    public CartController(CartService cartService) {
+        this.cartService = cartService;
     }
 
     @GetMapping
     CartDto detail() {
-        MongoCollection<Document> collection = mongoDatabase.getCollection(
-                "line_items");
-
-        Collection<Document> documents = new ArrayList<>();
-
-        collection.find().into(documents);
-
-        List<LineItemDto> lineItems = documents.stream()
-                .map(this::mapToDto)
-                .toList();
-
-        int totalPrice = lineItems.stream()
-                .mapToInt(CartDto.LineItemDto::totalPrice)
-                .sum();
-
+        Cart cart = cartService.getCart();
         return new CartDto(
-                lineItems,
-                totalPrice
+                cart.getLineItem().stream().map(this::mapToDto).toList(),
+                cart.getTotalPrice()
         );
     }
 
-    private LineItemDto mapToDto(Document document) {
-        String productId = document.getString("productId");
-        Document productDocument = findProduct(productId);
-
-        Integer unitPrice = document.getInteger("price");
-        Integer quantity = document.getInteger("quantity");
-
+    private LineItemDto mapToDto(LineItem lineItem) {
         return new LineItemDto(
-                document.getObjectId("_id").toString(),
-                document.getString("product_id"),
-                productDocument.getString("name"),
-                unitPrice,
-                quantity,
-                unitPrice * quantity
+                lineItem.getId(),
+                lineItem.getProductId(),
+                lineItem.getProductName(),
+                lineItem.getUnitPrice(),
+                lineItem.getQuantity(),
+                lineItem.getTotalPrice()
         );
-    }
-
-    private Document findProduct(String productId) {
-        return mongoDatabase.getCollection("products")
-                .find(Filters.eq("_id", new ObjectId(productId)))
-                .first();
     }
 }

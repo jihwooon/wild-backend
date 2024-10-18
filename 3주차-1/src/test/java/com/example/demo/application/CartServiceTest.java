@@ -1,8 +1,11 @@
 package com.example.demo.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import com.example.demo.infrastructure.LineItemDAO;
 import com.example.demo.infrastructure.ProductDAO;
@@ -70,6 +73,35 @@ class CartServiceTest {
         assertThat(cart.getTotalPrice()).isEqualTo(
                 product1.getPrice() * quantity1
                         + product2.getPrice() * quantity2);
+    }
+
+    @Test
+    @DisplayName("비어있는 장바구니 상품을 담는다.")
+    void addCart() {
+        String productId = product1.getId();
+        int quantity = 2;
+
+        cartService.addProduct(productId, quantity);
+
+        verify(lineItemDAO).add(
+                argThat(lineItem -> lineItem.getProductId().equals(productId)
+                        && lineItem.getQuantity() == quantity));
+    }
+
+    @Test
+    @DisplayName("이미 담긴 장바구니에 상품을 담는다.")
+    void addExistingCart() {
+        String productId = product2.getId();
+        int quantity = 2;
+        int oldQuantity = 3;
+
+        lineItems.add(new LineItem(product1.getId(), oldQuantity));
+
+        cartService.addProduct(productId, quantity);
+
+        verify(lineItemDAO).update(
+                argThat(lineItem -> lineItem.getProductId().equals(productId)
+                        && lineItem.getQuantity() == oldQuantity + quantity));
     }
 
     private void addProductToCart(Product product, int quantity) {

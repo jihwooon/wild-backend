@@ -19,7 +19,7 @@ class CartServiceTest {
 
     private Product product1;
     private Product product2;
-    List<LineItem> lineItems;
+    private List<LineItem> lineItems;
 
     private LineItemDAO lineItemDAO;
     private ProductDAO productDAO;

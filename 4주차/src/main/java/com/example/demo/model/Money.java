@@ -5,6 +5,8 @@ public record Money(
         String current
 ) {
 
+    public static final Money ZERO = new Money(0, "KRW");
+
     public Money plus(Money other) {
         if (current.equals(other.current)) {
             throw new IllegalArgumentException("통화가 다릅니다.");

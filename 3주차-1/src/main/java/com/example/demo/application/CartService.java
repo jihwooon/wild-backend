@@ -26,19 +26,10 @@ public class CartService {
             String productId = lineItem.getProductId();
             Product product = productDAO.find(productId);
 
-            int unitPrice = product.getPrice();
-            int quantity = lineItem.getQuantity();
-
-            lineItem.setProductName(product.getName());
-            lineItem.setUnitPrice(product.getPrice());
-            lineItem.setTotalPrice(unitPrice * quantity);
+            lineItem.setProduct(product);
         });
 
-        int totalPrice = lineItems.stream()
-                .mapToInt(LineItem::getTotalPrice)
-                .sum();
-
-        return new Cart(lineItems, totalPrice);
+        return new Cart(lineItems);
     }
 
     public void addProduct(String productId, int quantity) {
@@ -55,7 +46,7 @@ public class CartService {
             return;
         }
 
-        lineItem.setQuantity(quantity);
+        lineItem.addQuantity(quantity);
         lineItemDAO.update(lineItem);
     }
 }

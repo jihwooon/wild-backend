@@ -7,7 +7,6 @@ public class LineItem {
     private int quantity;
 
     private String productName;
-    private int totalPrice;
     private int unitPrice;
 
     public LineItem(String id, String productId, int quantity) {
@@ -37,27 +36,20 @@ public class LineItem {
         return productName;
     }
 
-    public int getTotalPrice() {
-        return totalPrice;
-    }
-
     public int getUnitPrice() {
         return unitPrice;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void addQuantity(int quantity) {
+        this.quantity += quantity;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public int getTotalPrice() {
+        return this.unitPrice * this.quantity;
     }
 
-    public void setTotalPrice(int totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public void setUnitPrice(int unitPrice) {
-        this.unitPrice = unitPrice;
+    public void setProduct(Product product) {
+        this.productName = product.getName();
+        this.unitPrice = product.getPrice();
     }
 }

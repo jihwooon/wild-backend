@@ -5,19 +5,19 @@ import java.util.List;
 
 public class Cart {
 
-    private List<LineItem> lineItem;
-    private int totalPrice;
+    private List<LineItem> lineItems;
 
-    public Cart(List<LineItem> lineItem, int totalPrice) {
-        this.lineItem = lineItem;
-        this.totalPrice = totalPrice;
+    public Cart(List<LineItem> lineItem) {
+        this.lineItems = lineItem;
     }
 
     public List<LineItem> getLineItem() {
-        return Collections.unmodifiableList(lineItem);
+        return Collections.unmodifiableList(lineItems);
     }
 
     public int getTotalPrice() {
-        return totalPrice;
+        return lineItems.stream()
+                .mapToInt(LineItem::getTotalPrice)
+                .sum();
     }
 }

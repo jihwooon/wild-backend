@@ -6,6 +6,8 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Repository;
@@ -51,5 +53,11 @@ public class ProductRepository {
                 document.getString("name"),
                 document.getInteger("price")
         );
+    }
+
+    public Map<String, Product> collectProductsByIds(List<String> productIds) {
+        return findAllByIds(productIds)
+                .stream()
+                .collect(Collectors.toMap(Product::getId, product -> product));
     }
 }

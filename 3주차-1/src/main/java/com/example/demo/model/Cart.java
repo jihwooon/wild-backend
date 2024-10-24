@@ -3,6 +3,7 @@ package com.example.demo.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class Cart {
 
@@ -40,5 +41,21 @@ public class Cart {
         lineItem.setProduct(product);
 
         lineItems.add(lineItem);
+    }
+
+    public List<String> getProductIds() {
+        return getLineItems().stream()
+                .map(LineItem::getProductId)
+                .toList();
+    }
+
+    public void setProductsForLineItems(
+            Map<String, Product> products) {
+        getLineItems()
+                .stream()
+                .peek(
+                        lineItem -> lineItem.setProduct(products.get(
+                                lineItem.getProductId()))
+                );
     }
 }

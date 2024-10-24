@@ -2,7 +2,9 @@ package com.example.demo.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -99,6 +101,55 @@ class CartTest {
         assertThat(lineItems).hasSize(1);
 
         assertThat(lineItems.get(0).getQuantity()).isEqualTo(quantity + 3);
+    }
+
+    @Test
+    @DisplayName("장바구니에 상품이 담기면 상품 Id를 리스트로 반환한다.")
+    void getProductIds() {
+        int quantity = 3;
+
+        Cart cart = new Cart(List.of(
+            createLineItem(product1, quantity)
+        ));
+
+        List<String> productIds = cart.getProductIds();
+
+        assertThat(productIds).isEqualTo(List.of(product1.getId()));
+    }
+
+    @Test
+    @DisplayName("장바구니에 상품이 담기면 상품 Id를 리스트로 반환한다.")
+    void getProductIdsWithManyLineItems() {
+        int quantity = 3;
+
+        Cart cart = new Cart(List.of(
+            createLineItem(product1, quantity),
+            createLineItem(product2, quantity)
+        ));
+
+        List<String> productIds = cart.getProductIds();
+
+        assertThat(productIds).isEqualTo(List.of(
+            product1.getId(),
+            product2.getId()));
+    }
+
+    @Test
+    @DisplayName("장바구니에 상품이 담기면 상품 Id를 리스트로 반환한다.")
+    void setProductsForLineItems() {
+        Cart cart = new Cart(List.of(
+            createLineItem(product1, 3),
+            createLineItem(product2, 3)
+        ));
+
+        Map<String, Product> products = new HashMap<>();
+        products.put(product1.getId(), product1);
+        products.put(product2.getId(), product2);
+
+        cart.setProductsForLineItems(products);
+
+        assertThat(cart.getLineItem(product1.getId()).getProductId()).isEqualTo(product1.getId());
+        assertThat(cart.getLineItem(product2.getId()).getProductId()).isEqualTo(product2.getId());
     }
 
     private LineItem createLineItem(Product product, int quantity) {

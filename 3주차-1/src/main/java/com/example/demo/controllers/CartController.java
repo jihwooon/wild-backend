@@ -23,7 +23,7 @@ public class CartController {
     CartDto detail() {
         Cart cart = cartService.getCart();
         return new CartDto(
-                cart.getLineItem().stream().map(this::mapToDto).toList(),
+                cart.getLineItems().stream().map(this::mapToDto).toList(),
                 cart.getTotalPrice()
         );
     }

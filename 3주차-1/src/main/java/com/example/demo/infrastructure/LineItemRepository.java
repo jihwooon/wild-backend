@@ -9,14 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component
-public class LineItemDAO {
+@Repository
+public class LineItemRepository {
 
     private final MongoCollection<Document> collection;
 
-    public LineItemDAO(MongoDatabase mongoDatabase) {
+    public LineItemRepository(MongoDatabase mongoDatabase) {
         this.collection = mongoDatabase.getCollection(
                 "line_items");
     }
